@@ -6,14 +6,14 @@ def word_frequency(text_or_path):
     Count how frequently each word appears in the text.
     Can accept a string or a file path to a text file.
     """
-    unique_words = {}
+    freq_words = {}
     if not isinstance(text_or_path, str):
         raise TypeError ("Only 'str' data with text or filepath allowed")
     
     def counting_word_frequency(data:str)->None:
         ''' Function counts the unique words in the given text data
         '''
-        nonlocal unique_words
+        nonlocal freq_words
         # Remove all special characters (keeping only letters, numbers, and spaces)
         cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', data)
         # convert string data to lower case (to avoid confict between capital and 
@@ -22,10 +22,10 @@ def word_frequency(text_or_path):
 
         # For each word in the text
         for data in cleaned_string.split():
-            if data in unique_words.keys():
-                unique_words[data] += 1
+            if data in freq_words.keys():
+                freq_words[data] += 1
             else:
-                unique_words[data] = 1
+                freq_words[data] = 1
     
     # Function supports only two types of strings
     #   1. A valid file path - If exists it reads and processes it
@@ -40,7 +40,7 @@ def word_frequency(text_or_path):
        # Text data, send the raw text for processing
        counting_word_frequency(text_or_path)
 
-    return unique_words
+    return freq_words
 
 def unique_words(text_or_path):
     """
