@@ -46,7 +46,38 @@ def unique_words(text_or_path):
     """
     Extract unique words from the text.
     """
-    pass
+
+    unique_words_txt = set()
+
+    if not isinstance(text_or_path, str):
+        raise TypeError ("Only 'str' data with text or filepath allowed")
+    
+    def count_unique_words(data:str):
+        nonlocal unique_words_txt
+
+        # Remove all special characters (keeping only letters, numbers, and spaces)
+        cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', data)
+
+        # convert string data to lower case (to avoid confict between capital and 
+        # non-capital words)
+        cleaned_string = cleaned_string.lower()
+        curr_unique_words = set(cleaned_string.split())
+
+        # create unique word set
+        unique_words_txt = unique_words_txt.union(curr_unique_words)
+
+
+    # If it is a path or file, send each row for processing
+    if os.path.isfile(text_or_path):
+        with open(text_or_path, 'r') as file:
+            for row in file:
+                count_unique_words(row)
+    
+    else:
+        count_unique_words(text_or_path)
+
+    return unique_words_txt
+
 
 def word_cooccurrence_matrix(text_or_path, window=2):
     """

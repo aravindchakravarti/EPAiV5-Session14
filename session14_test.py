@@ -33,17 +33,17 @@ class TestTextToolkit(unittest.TestCase):
         freq_file = tt.word_frequency(self.text_path)
         self.assertEqual(freq_file, expected)
 
-    # # Test for unique_words function
-    # def test_unique_words(self):
-    #     # Test with string input
-    #     unique = tt.unique_words(self.text_data)
-    #     expected = {'hello', 'world', 'this', 'is', 'a', 'test', 
-    #                 'again', 'testing', 'word', 'frequencies'}
-    #     self.assertEqual(set(unique), expected)
+    # Test for unique_words function
+    def test_unique_words(self):
+        # Test with string input
+        unique = tt.unique_words(self.text_data)
+        expected = {'hello', 'world', 'this', 'is', 'a', 'test', 
+                    'again', 'testing', 'word', 'frequencies'}
+        self.assertEqual(set(unique), expected)
 
-    #     # Test with file input
-    #     unique_file = tt.unique_words(self.text_path)
-    #     self.assertEqual(set(unique_file), expected)
+        # Test with file input
+        unique_file = tt.unique_words(self.text_path)
+        self.assertEqual(set(unique_file), expected)
 
     # # Test for word_cooccurrence_matrix function
     # def test_word_cooccurrence_matrix(self):
