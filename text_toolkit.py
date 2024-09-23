@@ -1,18 +1,42 @@
 import os
 import re
 
-def word_frequency(text_or_path):
+def word_frequency(text_or_path, filter_func = None):
     """
-    Count how frequently each word appears in the text.
-    Can accept a string or a file path to a text file.
+    Counts the frequency of each word in the given text, which can be provided as either a string or a file path.
+    
+    This function processes the text by removing special characters, converting it to lowercase, and optionally 
+    applying a filter function. It then counts how frequently each word appears in the text or file.
+
+    Parameters:
+    text_or_path (str): The input data, which can be either a string of text or a file path to a text file.
+    filter_func (callable, optional): A function used to filter the words before counting their frequency. 
+                                      If not provided, all words are counted. The filter function should 
+                                      take a string (word) as input and return `True` to include the word in 
+                                      the count or `False` to exclude it.
+
+    Returns:
+    dict: A dictionary where the keys are unique words and the values are their corresponding frequency counts.
+
+    Raises:
+    TypeError: If `text_or_path` is not a string.
+    
+    Example usage:
+    word_frequency("This is a test text. This test is only a test.", lambda word: len(word) > 2)
     """
     freq_words = {}
     if not isinstance(text_or_path, str):
         raise TypeError ("Only 'str' data with text or filepath allowed")
     
-    def counting_word_frequency(data:str)->None:
-        ''' Function counts the unique words in the given text data
-        '''
+    def counting_word_frequency(data:str, filter_func)->None:
+        """
+        Count the occurrences of each word in the provided string `data`, applying the filter function 
+        if provided.
+
+        Parameters:
+        data (str): The text to be processed and counted.
+        filter_func (callable): A function used to filter words before counting.
+        """
         nonlocal freq_words
         # Remove all special characters (keeping only letters, numbers, and spaces)
         cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', data)
@@ -20,8 +44,14 @@ def word_frequency(text_or_path):
         # non-capital words)
         cleaned_string = cleaned_string.lower()
 
+        # Split the text into words
+        cleaned_string = cleaned_string.split()
+
+        # Apply the filter function if provided
+        cleaned_string = list(filter(filter_func, cleaned_string))
+
         # For each word in the text
-        for data in cleaned_string.split():
+        for data in cleaned_string:
             if data in freq_words.keys():
                 freq_words[data] += 1
             else:
@@ -34,11 +64,11 @@ def word_frequency(text_or_path):
         # Open the file, read each line and send for processing
         with open(text_or_path, 'r') as file:
             for row in file:
-                counting_word_frequency(row)
+                counting_word_frequency(row, filter_func)
 
     else:
        # Text data, send the raw text for processing
-       counting_word_frequency(text_or_path)
+       counting_word_frequency(text_or_path, filter_func)
 
     return freq_words
 
@@ -149,53 +179,38 @@ def word_cooccurrence_matrix(text_or_path, window=2)-> list:
 
 def text_generator(text_or_path):
     """
-    A generator that yields one line of text at a time.
+    A generator function that yields one line of text at a time, either from a file or a string.
+
+    If `text_or_path` is a file path, the function opens the file and yields each line.
+    If `text_or_path` is a plain string, it cleans up special characters, converts the string to lowercase,
+    splits it into lines, and then yields each cleaned line.
+
+    Parameters:
+    text_or_path (str): The input data, which can be either a file path or a string.
+
+    Yields:
+    str: One line of text at a time, either from the file or the cleaned string.
+
+    Raises:
+    TypeError: If the input is not a string or file path.
+    IOError: If there is an error opening or reading from the file.
     """
+
     if not isinstance(text_or_path, str):
         raise TypeError ("Only 'str' data with text or filepath allowed")
     
-    # Clean up special charecters and lower the case
-    cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', text_or_path).lower()
-    cleaned_string = cleaned_string.split('\n')
+    if (os.path.isfile(text_or_path)):
+        try:
+            with open(text_or_path, 'r') as file:
+                for row in file:
+                    yield row
+        except IOError as e:
+            print(f"Error reading file: {e}")
 
-    def __iter__(self):
-        return self
-    
-    def __next__(self):
-        return next(cleaned_string)
+    else:
+        # Clean up special charecters and lower the case
+        cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', text_or_path).lower()
+        cleaned_string = cleaned_string.split('\n')
 
-
-'''
-Create a Text Analytics Toolkit
-Overview: Create a Python module called text_toolkit that provides a set of text analysis tools. 
-This module will include functionalities such as:
-
-Counting word frequencies,
-Extracting unique words,
-Finding word co-occurrences,
-Generating word sequences,
-Handling files via context managers,
-Handling large text datasets efficiently using generators and iterables.
-The final module should also be version-controlled using Git.
- 
-
-Assignment Breakdown:
-
-Module Creation: Create a Python module called text_toolkit.py containing several 
-functions for text processing and analysis.
-
-The module should contain the following tools:
-Word frequency counter: Count how often each word appears in a given text file.
-Unique word extractor: Extract all unique words in the text.
-Word co-occurrence matrix: Create a matrix showing how frequently words appear next to each other in the text.
-Text generator: A generator function that yields one line of the text at a time to process large files efficiently.
-Functionality Requirements:
-
-The module should support large text files by using generators to handle memory efficiently.
-Functions should accept both file paths and string inputs.
-Use context managers to ensure proper file handling.
-Encourage the use of scopes, closures, and functional parameters where applicable.
-The module should allow for reuse and easy integration into larger AI projects (e.g., for NLP tasks).
-Create a README.md file that explains how to use each function in the module, including sample usage and examples.
-Once done, run session14_test.py using Actions, and upload a screenshot of your action's result on your README.md file. Share the link to your README.md file along with other code
-'''
+        for data in cleaned_string:
+            yield data
