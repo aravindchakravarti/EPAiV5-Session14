@@ -44,9 +44,19 @@ def word_frequency(text_or_path):
 
 def unique_words(text_or_path):
     """
-    Extract unique words from the text.
-    """
+    Extract unique words from a given text or file path.
 
+    Parameters:
+        text_or_path (str): Input can either be a string containing text or 
+                            a file path to a text file.
+
+    Returns:
+        set: A set of unique words in lowercase from the input text.
+    
+    Raises:
+        TypeError: If the input is not a string.
+        IOError: If the file path provided is invalid or cannot be read.
+    """
     unique_words_txt = set()
 
     if not isinstance(text_or_path, str):
@@ -69,9 +79,12 @@ def unique_words(text_or_path):
 
     # If it is a path or file, send each row for processing
     if os.path.isfile(text_or_path):
-        with open(text_or_path, 'r') as file:
-            for row in file:
-                count_unique_words(row)
+        try:
+            with open(text_or_path, 'r') as file:
+                for row in file:
+                    count_unique_words(row)
+        except IOError as e:
+            raise IOError(f"Error reading file: {e}")
     
     else:
         count_unique_words(text_or_path)
@@ -79,11 +92,60 @@ def unique_words(text_or_path):
     return unique_words_txt
 
 
-def word_cooccurrence_matrix(text_or_path, window=2):
+def word_cooccurrence_matrix(text_or_path, window=2)-> list:
     """
-    Create a word co-occurrence matrix with a given window size.
+    Returns the word coocurrence matrix from a given text or file path.
+
+    Parameters:
+        text_or_path (str): Input can either be a string containing text or 
+                            a file path to a text file.
+        window(int): The window size for fetching adjecent words
+
+    Returns:
+        list: A list containing tuples of word cooccurance matrix.
+    
+    Raises:
+        TypeError: If the input is not a string.
+        IOError: If the file path provided is invalid or cannot be read.
     """
-    pass
+    if not isinstance(text_or_path, str):
+        raise TypeError ("Only 'str' data with text or filepath allowed")
+    
+    if not isinstance(window, int):
+        raise TypeError ("For \'window\', only integer are allowed")
+    
+    list_of_co_words = []
+
+    def process_cooccurance(data: str, window: int):
+        ''' Creates the list of tuples containing word cooccurence pairs
+        '''
+
+        nonlocal list_of_co_words
+
+        # Clean up special charecters and lower the case
+        cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', data).lower()
+        cleaned_string = cleaned_string.split()
+
+        # form the pair
+        for index in range(len(cleaned_string)-window):
+            co_word_pair = tuple(cleaned_string[index:index + window])
+            list_of_co_words.append(co_word_pair)
+
+    # If it is a path or file, send each row for processing
+    if os.path.isfile(text_or_path):
+        try:
+            with open(text_or_path, 'r') as file:
+                for row in file:
+                    process_cooccurance(row, window)
+        except IOError as e:
+            raise IOError(f"Error reading file: {e}")
+    
+    else:
+        process_cooccurance(text_or_path, window)
+
+
+    return list_of_co_words
+
 
 def text_generator(text_or_path):
     """

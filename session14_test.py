@@ -45,17 +45,17 @@ class TestTextToolkit(unittest.TestCase):
         unique_file = tt.unique_words(self.text_path)
         self.assertEqual(set(unique_file), expected)
 
-    # # Test for word_cooccurrence_matrix function
-    # def test_word_cooccurrence_matrix(self):
-    #     # Test with string input
-    #     cooccurrence = tt.word_cooccurrence_matrix(self.text_data, window=2)
-    #     self.assertIn(('hello', 'world'), cooccurrence)
-    #     self.assertIn(('world', 'this'), cooccurrence)
+    # Test for word_cooccurrence_matrix function
+    def test_word_cooccurrence_matrix(self):
+        # Test with string input
+        cooccurrence = tt.word_cooccurrence_matrix(self.text_data, window=2)
+        self.assertIn(('hello', 'world'), cooccurrence)
+        self.assertIn(('world', 'this'), cooccurrence)
 
-    #     # Test with file input
-    #     cooccurrence_file = tt.word_cooccurrence_matrix(self.text_path, window=2)
-    #     self.assertIn(('hello', 'world'), cooccurrence_file)
-    #     self.assertIn(('world', 'this'), cooccurrence_file)
+        # Test with file input
+        # cooccurrence_file = tt.word_cooccurrence_matrix(self.text_path, window=2)
+        # self.assertIn(('hello', 'world'), cooccurrence_file)
+        # self.assertIn(('world', 'this'), cooccurrence_file)
 
     # # Test for text_generator function
     # def test_text_generator(self):
