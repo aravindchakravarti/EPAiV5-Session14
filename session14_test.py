@@ -53,27 +53,27 @@ class TestTextToolkit(unittest.TestCase):
         self.assertIn(('world', 'this'), cooccurrence)
 
         # Test with file input
-        # cooccurrence_file = tt.word_cooccurrence_matrix(self.text_path, window=2)
-        # self.assertIn(('hello', 'world'), cooccurrence_file)
-        # self.assertIn(('world', 'this'), cooccurrence_file)
+        cooccurrence_file = tt.word_cooccurrence_matrix(self.text_path, window=2)
+        self.assertIn(('hello', 'world'), cooccurrence_file)
+        self.assertIn(('world', 'this'), cooccurrence_file)
 
-    # # Test for text_generator function
-    # def test_text_generator(self):
-    #     # Test with string input
-    #     text_gen = tt.text_generator(self.text_data)
-    #     self.assertTrue(hasattr(text_gen, '__iter__'))
-    #     self.assertTrue(hasattr(text_gen, '__next__'))
+    # Test for text_generator function
+    def test_text_generator(self):
+        # Test with string input
+        text_gen = tt.text_generator(self.text_data)
+        self.assertTrue(hasattr(text_gen, '__iter__'))
+        self.assertTrue(hasattr(text_gen, '__next__'))
 
-    #     lines = list(text_gen)
-    #     self.assertEqual(len(lines), 3)
+        lines = list(text_gen)
+        self.assertEqual(len(lines), 3)
 
-    #     # Test with file input
-    #     text_gen_file = tt.text_generator(self.text_path)
-    #     self.assertTrue(hasattr(text_gen_file, '__iter__'))
-    #     self.assertTrue(hasattr(text_gen_file, '__next__'))
+        # # Test with file input
+        # text_gen_file = tt.text_generator(self.text_path)
+        # self.assertTrue(hasattr(text_gen_file, '__iter__'))
+        # self.assertTrue(hasattr(text_gen_file, '__next__'))
 
-    #     lines_file = list(text_gen_file)
-    #     self.assertEqual(len(lines_file), 3)
+        # lines_file = list(text_gen_file)
+        # self.assertEqual(len(lines_file), 3)
 
     # # Test for handling large text files using generators
     # def test_large_file_handling(self):

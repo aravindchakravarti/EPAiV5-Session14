@@ -151,7 +151,18 @@ def text_generator(text_or_path):
     """
     A generator that yields one line of text at a time.
     """
-    pass
+    if not isinstance(text_or_path, str):
+        raise TypeError ("Only 'str' data with text or filepath allowed")
+    
+    # Clean up special charecters and lower the case
+    cleaned_string = re.sub(r'[^A-Za-z0-9\s]', '', text_or_path).lower()
+    cleaned_string = cleaned_string.split('\n')
+
+    def __iter__(self):
+        return self
+    
+    def __next__(self):
+        return next(cleaned_string)
 
 
 '''
